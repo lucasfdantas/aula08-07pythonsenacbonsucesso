@@ -1,7 +1,7 @@
 from django.shortcuts import render
 import platform
 import subprocess
-
+from .models import Usuarios
 # Create your views here.
 def home(request):
     return render(request, 'home/home.html')
@@ -10,7 +10,17 @@ def cadastro(request):
     return render(request, 'cadastro/index.html')
 
 def usuarios(request):
-    return render(request, 'usuarios/index.html')
+    novo_usuario = Usuarios()
+    novo_usuario.nome = request.POST.get('nome')
+    novo_usuario.email = request.POST.get('email')
+    novo_usuario.setor = request.POST.get('setor')
+    novo_usuario.save()
+
+    usuarios = {
+        'usuarios': Usuarios.objects.all()
+    }
+
+    return render(request, 'usuarios/index.html', usuarios)
 
 def sistema(request):
     sistema = platform.system()
