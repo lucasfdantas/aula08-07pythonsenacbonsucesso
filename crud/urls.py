@@ -25,8 +25,9 @@ urlpatterns = [
     path('cadastro/', views.cadastro , name='cadastro'),
     path('usuarios/', views.usuarios , name='usuarios'),
     path('sistema/', views.sistema , name='sistema'),
-    path('', views.home, name='home')
-    
+    path('', views.home, name='home'),
+    path('editarUsuario/<int:id>', views.editarUsuario, name='editarUsuario' ),
+    path('deletarUsuario/<int:id>', views.deletarUsuario, name='deletarUsuario' ),
 
 
 ]

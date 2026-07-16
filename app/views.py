@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, redirect, render
 import platform
 import subprocess
 from .models import Usuarios
@@ -10,17 +10,36 @@ def cadastro(request):
     return render(request, 'cadastro/index.html')
 
 def usuarios(request):
-    novo_usuario = Usuarios()
-    novo_usuario.nome = request.POST.get('nome')
-    novo_usuario.email = request.POST.get('email')
-    novo_usuario.setor = request.POST.get('setor')
-    novo_usuario.save()
+    if request.method == "POST":
+        novo_usuario = Usuarios()
+        novo_usuario.nome = request.POST.get('nome')
+        novo_usuario.email = request.POST.get('email')
+        novo_usuario.setor = request.POST.get('setor')
+        novo_usuario.save()
 
     usuarios = {
         'usuarios': Usuarios.objects.all()
     }
 
     return render(request, 'usuarios/index.html', usuarios)
+
+
+def editarUsuario(request, id):
+    user = get_object_or_404(Usuarios, pk=id)
+    editarUser = {
+        'editarUser':user
+    }
+    if request.method == "POST":
+        edit_usuario = get_object_or_404(Usuarios, pk=id)
+        edit_usuario.nome = request.POST.get('nome')
+        edit_usuario.email = request.POST.get('email')
+        edit_usuario.setor = request.POST.get('setor')
+        edit_usuario.save()
+        return redirect('../usuarios/')
+    else:
+        return render(request, 'editarUsuario/index.html', editarUser)
+
+
 
 def sistema(request):
     sistema = platform.system()
@@ -74,3 +93,10 @@ def sistema(request):
     }
 
     return render(request, 'sistema/index.html', context)
+
+
+def deletarUsuario(request, id):
+    delete_user = get_object_or_404(Usuarios, pk=id)
+    delete_user.delete()
+    return redirect('../usuarios/')
+
